@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trat - Alta Performance e Reabilitação</title>
+    
+    <!-- React & Babel -->
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Google Fonts: Exo 2 (Para títulos e logo) e Inter (Para leitura) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Importando variações normais e itálicas (para bater com a logo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,400;0,600;0,700;0,900;1,800;1,900&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        trat: {
+                            orange: '#fc4404',
+                            green: '#04fc04',
+                            black: '#0a0a0a',
+                            dark: '#171717',
+                            light: '#fafafa'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        // A fonte 'logo' usará a Exo 2 para replicar a energia da sua marca
+                        logo: ['"Exo 2"', 'sans-serif'],
+                    },
+                    animation: {
+                        'blob': 'blob 10s infinite',
+                        'slide-up': 'slideUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                    },
+                    keyframes: {
+                        blob: {
+                            '0%': { transform: 'translate(0px, 0px) scale(1)' },
+                            '33%': { transform: 'translate(30px, -50px) scale(1.1)' },
+                            '66%': { transform: 'translate(-20px, 20px) scale(0.9)' },
+                            '100%': { transform: 'translate(0px, 0px) scale(1)' },
+                        },
+                        slideUp: {
+                            '0%': { transform: 'translateY(40px)', opacity: '0' },
+                            '100%': { transform: 'translateY(0)', opacity: '1' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body { background-color: #fafafa; }
+        
+        /* Ocultar barra de rolagem */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #171717; }
+        ::-webkit-scrollbar-thumb { background: #fc4404; }
+
+        /* Grade de fundo estilo biomecânica para o Hero */
+        .bg-grid {
+            background-size: 50px 50px;
+            background-image: 
+                linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+        }
+
+        /* Linha de conexão animada */
+        .connecting-line {
+            width: 2px;
+            background: linear-gradient(to bottom, #fc4404, #04fc04, transparent);
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 0;
+        }
+
+        .delay-100 { animation-delay: 100ms; }
+        .delay-200 { animation-delay: 200ms; }
+        .delay-300 { animation-delay: 300ms; }
+        .delay-400 { animation-delay: 400ms; }
+        .animation-delay-2000 { animation-delay: 2s; }
+    </style>
+</head>
+<body class="text-slate-900 font-sans antialiased selection:bg-trat-orange selection:text-white">
+    
+    <div id="root"></div>
+
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // ==========================================
+        // COMPONENTES DINÂMICOS
+        // ==========================================
+
+        const Navbar = () => {
+            const [scrolled, setScrolled] = useState(false);
+
+            useEffect(() => {
+                const handleScroll = () => setScrolled(window.scrollY > 50);
+                window.addEventListener('scroll', handleScroll);
+                return () => window.removeEventListener('scroll', handleScroll);
+            }, []);
+
+            return (
+                <header className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-trat-black/95 backdrop-blur-md py-4 shadow-lg' : 'bg-transparent py-6'}`}>
+                    <div className="max-w-7xl mx-auto px-6 flex justify-between items-center">
+                        {/* ALTERE AQUI: Inseri a sua logo como imagem. Substitua o src pelo link da sua logo transparente */}
+                        <a href="#inicio" className="flex items-center">
+                            {/* <img src="LINK_DA_SUA_LOGO.png" alt="Trat Logo" className="h-10" /> */}
+                            
+                            {/* Caso a imagem não carregue, este é um fallback em texto imitando sua logo */}
+                            <div className="text-4xl font-logo font-black italic tracking-tighter text-trat-orange flex items-center">
+                                <span className="text-trat-green mr-1 text-2xl">▲</span> trat
+                            </div>
+                        </a>
+
+                        <nav className="hidden md:flex gap-8 font-semibold text-sm tracking-wide text-white uppercase">
+                            <a href="#historia" className="hover:text-trat-orange transition-colors">História</a>
+                            <a href="#tratamentos" className="hover:text-trat-orange transition-colors">Tratamentos</a>
+                            <a href="#pilates" className="hover:text-trat-orange transition-colors">Pilates</a>
+                            <a href="#localizacao" className="hover:text-trat-orange transition-colors">Contato</a>
+                        </nav>
+
+                        {/* ALTERE AQUI: Link do Whatsapp geral */}
+                        <button onClick={() => window.open('https://wa.me/5579999395245', '_blank')} className="hidden md:block px-6 py-2 bg-trat-orange text-white font-bold uppercase hover:bg-white hover:text-trat-orange transition-colors rounded-sm">
+                            Agendar
+                        </button>
+                    </div>
+                </header>
+            );
+        };
+
+        const HeroSection = () => {
+            return (
+                <section id="inicio" className="relative h-screen w-full bg-trat-black overflow-hidden flex flex-col justify-center items-center">
+                    <div className="absolute inset-0 bg-grid"></div>
+                    
+                    <div className="absolute top-[20%] left-[20%] w-[30vw] h-[30vw] bg-trat-orange rounded-full mix-blend-screen filter blur-[120px] opacity-30 animate-blob"></div>
+                    <div className="absolute bottom-[20%] right-[20%] w-[30vw] h-[30vw] bg-trat-green rounded-full mix-blend-screen filter blur-[120px] opacity-20 animate-blob animation-delay-2000"></div>
+
+                    <div className="relative z-10 text-center px-6 max-w-5xl mt-20">
+                        <p className="text-trat-green font-bold tracking-[0.3em] uppercase mb-6 opacity-0 animate-slide-up">
+                            Fisioterapia & Pilates Avançado
+                        </p>
+                        
+                        <h1 className="text-6xl md:text-8xl lg:text-9xl font-logo font-black italic text-white leading-[0.9] uppercase tracking-tighter opacity-0 animate-slide-up delay-100">
+                            Domine O Seu <br/>
+                            <span className="text-trat-orange">Movimento</span>
+                        </h1>
+                        
+                        <p className="text-gray-400 text-lg md:text-2xl mt-8 max-w-2xl mx-auto font-medium opacity-0 animate-slide-up delay-200">
+                            Reabilitação baseada em ciência. Desenvolvido para quem não aceita viver com dor ou limitações.
+                        </p>
+
+                        <div className="flex flex-col sm:flex-row gap-6 justify-center mt-12 opacity-0 animate-slide-up delay-300">
+                            <button onClick={() => window.open('https://wa.me/5579999395245?text=Quero%20uma%20consulta', '_blank')} className="px-8 py-4 bg-trat-orange text-white font-logo font-bold italic text-xl uppercase hover:scale-105 transition-transform shadow-[0_0_20px_rgba(252,68,4,0.4)]">
+                                Avaliação Fisioterapêutica
+                            </button>
+                            <button onClick={() => window.open('https://wa.me/5579999395245?text=Quero%20Pilates', '_blank')} className="px-8 py-4 bg-transparent border-2 border-trat-green text-trat-green font-logo font-bold italic text-xl uppercase hover:bg-trat-green hover:text-trat-black transition-colors">
+                                Iniciar Pilates
+                            </button>
+                        </div>
+                    </div>
+
+                    <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center opacity-0 animate-slide-up delay-400">
+                        <span className="text-gray-500 text-sm uppercase tracking-widest mb-2">Explore</span>
+                        <div className="w-px h-16 bg-gradient-to-b from-trat-orange to-transparent"></div>
+                    </div>
+                </section>
+            );
+        };
+
+        const App = () => {
+            useEffect(() => {
+                if(window.lucide) window.lucide.createIcons();
+            });
+
+            return (
+                <div className="min-h-screen bg-trat-light relative">
+                    <Navbar />
+                    <HeroSection />
+
+                    {/* SESSÃO 2: Nossa História */}
+                    <section id="historia" className="py-32 px-6 max-w-7xl mx-auto relative">
+                        <div className="flex flex-col lg:flex-row gap-16 items-center">
+                            
+                            <div className="w-full lg:w-1/2 relative group">
+                                <div className="absolute -inset-4 bg-trat-black translate-x-4 translate-y-4 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-500"></div>
+                                {/* ALTERE AQUI: Link da imagem da clínica ou equipe */}
+                                <img 
+                                    src="https://hcdsbawdwzmlujxnxymf.supabase.co/storage/v1/object/public/video%20lp1/GramFetchr_Thumbnail_76802720.jpeg" 
+                                    alt="Equipe Trat" 
+                                    className="relative z-10 w-full h-[600px] object-cover transition-all duration-700"
+                                />
+                                <div className="absolute bottom-6 -right-6 z-20 bg-trat-orange text-white p-6 shadow-2xl">
+                                    <p className="font-logo font-black italic text-5xl">100%</p>
+                                    <p className="font-bold uppercase tracking-widest text-sm">Foco em Resultado</p>
+                                </div>
+                            </div>
+
+                            <div className="w-full lg:w-1/2 space-y-8">
+                                <h2 className="text-5xl md:text-6xl font-logo font-black italic uppercase text-trat-black leading-none">
+                                    Nossa <span className="text-trat-orange">Origem</span>
+                                </h2>
+                                <div className="w-20 h-2 bg-trat-green"></div>
+                                <p className="text-xl text-gray-700 font-medium leading-relaxed">
+                                    A TRAT não é uma clínica convencional. Nascemos da necessidade de oferecer uma reabilitação contra a dor e focada na biomecânica real do corpo humano.
+                                </p>
+                                <p className="text-lg text-gray-600 leading-relaxed">
+                                    Acreditamos que todo paciente merece o tratamento individualizado. Estruturamos um ambiente onde a ciência se une ao movimento para não apenas curar, mas fortalecer sua estrutura para que o problema não retorne.
+                                </p>
+                                
+                                <ul className="space-y-4 pt-4">
+                                    {['Diagnóstico Preciso', 'Tratamento Individualizado', 'Equipamentos de Alta Performance'].map((item, i) => (
+                                        <li key={i} className="flex items-center gap-4 text-lg font-bold uppercase text-trat-black">
+                                            <i data-lucide="check" className="text-trat-green"></i> {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div>
+
+                        </div>
+                    </section>
+
+                    {/* SESSÃO 3: Tratamentos */}
+                    <section id="tratamentos" className="py-32 bg-trat-dark text-white relative">
+                        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-px h-full bg-white/10"></div>
+                        
+                        <div className="max-w-7xl mx-auto px-6 relative z-10">
+                            <div className="text-center mb-20">
+                                <h2 className="text-5xl md:text-7xl font-logo font-black italic uppercase text-white mb-6">
+                                    Protocolos de <br/><span className="text-trat-orange">Tratamento</span>
+                                </h2>
+                                <p className="text-gray-400 text-xl max-w-2xl mx-auto">Técnicas validadas cientificamente aplicadas com precisão para recuperar sua função máxima.</p>
+                            </div>
+
+                            {/* Grid perfeito com 9 Cards */}
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                                
+                                {/* Card 1 */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-orange transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-orange/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="activity" className="w-12 h-12 text-trat-orange mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Fisioterapia Ortopédica</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Reabilitação intensiva para pós-operatórios, fraturas e desgastes articulares. Devolva a força e a estabilidade ao seu corpo.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Fisioterapia%20Ortopédica', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-orange font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 2 */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-green transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-green/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="dumbbell" className="w-12 h-12 text-trat-green mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Fisioterapia Esportiva</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Prevenção e tratamento de lesões em atletas. Análise de gestos esportivos e ganho de performance com segurança.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Fisioterapia%20Esportiva', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-green font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 3 */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-white transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="hand" className="w-12 h-12 text-white mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Terapia Manual</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Manipulações e mobilizações articulares precisas para alívio imediato da dor e restauração da mobilidade natural.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Terapia%20Manual', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-trat-orange transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 4 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-orange transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-orange/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="zap" className="w-12 h-12 text-trat-orange mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Quiropraxia</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Ajustes articulares de alta velocidade para alinhar a coluna, otimizar o sistema nervoso e remover bloqueios de movimento.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Quiropraxia', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-orange font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 5 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-green transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-green/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="crosshair" className="w-12 h-12 text-trat-green mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Laserterapia</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Tecnologia de alta potência para aceleração da cicatrização celular e redução imediata de processos inflamatórios agudos.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Laserterapia', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-green font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 6 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-white transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="battery-charging" className="w-12 h-12 text-white mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Recovery Esportivo</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Sistemas de compressão e recuperação muscular avançada para acelerar a regeneração e preparar você para o próximo treino.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Recovery', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-trat-orange transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 7 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-orange transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-orange/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="heart-pulse" className="w-12 h-12 text-trat-orange mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Osteopatia</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Abordagem integral do corpo humano. Tratamento da causa raiz da dor através das interligações mecânicas e fasciais.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Osteopatia', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-orange font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 8 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-trat-green transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-trat-green/10 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="target" className="w-12 h-12 text-trat-green mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Dry Needling</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Agulhamento a seco para desativação de pontos gatilho, liberando tensões musculares profundas rapidamente.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Dry%20Needling', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-trat-green font-bold uppercase tracking-widest text-sm hover:text-white transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                                {/* Card 9 - Novo */}
+                                <div className="bg-trat-black p-10 border-t-4 border-transparent hover:border-white transition-all duration-300 group relative overflow-hidden flex flex-col h-full">
+                                    <div className="absolute top-0 right-0 w-32 h-32 bg-white/5 rounded-bl-full -z-10 group-hover:scale-150 transition-transform duration-500"></div>
+                                    <i data-lucide="waves" className="w-12 h-12 text-white mb-8 shrink-0"></i>
+                                    <h3 className="text-2xl font-logo font-black italic uppercase mb-4 shrink-0">Liberação Miofascial</h3>
+                                    <p className="text-gray-400 font-medium flex-grow">
+                                        Técnicas manuais e instrumentais para soltar a fáscia muscular, melhorando a flexibilidade e o deslizamento dos tecidos.
+                                    </p>
+                                    <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20sessão%20de%20Liberação%20Miofascial', '_blank')} className="mt-8 shrink-0 w-fit flex items-center gap-2 text-white font-bold uppercase tracking-widest text-sm hover:text-trat-orange transition-colors group-hover:translate-x-2 duration-300">
+                                        <i data-lucide="message-circle" className="w-5 h-5"></i> Agendar Sessão
+                                    </button>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SESSÃO 4: Pilates */}
+                    <section id="pilates" className="py-32 px-6 max-w-7xl mx-auto">
+                        <div className="bg-trat-black rounded-sm overflow-hidden flex flex-col md:flex-row relative">
+                            <div className="absolute left-0 top-0 bottom-0 w-2 bg-trat-green"></div>
+                            
+                            <div className="w-full md:w-1/2 p-12 md:p-20 flex flex-col justify-center">
+                                <h2 className="text-5xl md:text-7xl font-logo font-black italic uppercase text-white leading-none mb-6">
+                                    Estúdio <br/> <span className="text-trat-green">Pilates</span>
+                                </h2>
+                                <p className="text-gray-400 text-lg mb-8 font-medium">
+                                    O controle de corpo que você precisa para uma vida sem limitações. Aparelhos de ponta, instrutores focados e turmas reduzidas para máxima atenção aos seus movimentos.
+                                </p>
+                                
+                                <div className="grid grid-cols-2 gap-6 mb-10">
+                                    <div>
+                                        <p className="text-4xl font-logo font-black italic text-trat-green">04</p>
+                                        <p className="text-gray-300 font-bold uppercase text-xs tracking-wider">Alunos por turma</p>
+                                    </div>
+                                    <div>
+                                        <p className="text-4xl font-logo font-black italic text-white">100%</p>
+                                        <p className="text-gray-300 font-bold uppercase text-xs tracking-wider">Acompanhamento</p>
+                                    </div>
+                                </div>
+
+                                <button onClick={() => window.open('https://wa.me/5579999395245?text=Olá,%20quero%20agendar%20uma%20aula%20de%20Pilates', '_blank')} className="w-fit px-8 py-4 bg-trat-green text-trat-black font-logo font-bold italic text-xl uppercase hover:bg-white transition-colors">
+                                    Agendar Aula
+                                </button>
+                            </div>
+
+                            <div className="w-full md:w-1/2 relative min-h-[400px]">
+                                {/* ALTERE AQUI: Imagem do Pilates */}
+                                <img 
+                                    src="https://images.unsplash.com/photo-1599901860904-17e6ed7083a0?auto=format&fit=crop&q=80&w=800" 
+                                    alt="Pilates" 
+                                    className="absolute inset-0 w-full h-full object-cover transition-all duration-700"
+                                />
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* SESSÃO 5: Localização e Horários */}
+                    <section id="localizacao" className="py-24 bg-white border-t border-gray-200">
+                        <div className="max-w-7xl mx-auto px-6">
+                            <h2 className="text-4xl md:text-5xl font-logo font-black italic uppercase text-trat-black text-center mb-16">
+                                Base de <span className="text-trat-orange">Localização</span>
+                            </h2>
+
+                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 border-4 border-trat-black">
+                                
+                                <div className="bg-white p-10 md:p-16 flex flex-col justify-center">
+                                    <div className="space-y-12">
+                                        <div>
+                                            <p className="text-trat-orange font-bold uppercase tracking-widest text-sm mb-2">Localização</p>
+                                            <p className="text-2xl font-bold text-trat-black">
+                                                {/* ALTERE AQUI */}
+                                                Praça Abelardo Barreto do Rosário - Centro<br/>
+                                                Tobias Barreto - SE
+                                            </p>
+                                        </div>
+                                        
+                                        <div>
+                                            <p className="text-trat-orange font-bold uppercase tracking-widest text-sm mb-2">Horário de Funcionamento</p>
+                                            <p className="text-xl font-bold text-trat-black">Seg - Sex: 07h às 21h</p>
+                                            <p className="text-xl font-bold text-trat-black">Sábados: 08h às 13h</p>
+                                        </div>
+
+                                        <div>
+                                            <p className="text-trat-orange font-bold uppercase tracking-widest text-sm mb-2">Contato Direto</p>
+                                            <p className="text-xl font-bold text-trat-black">(79) 99939-5245</p>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div className="bg-trat-light border-t-4 lg:border-t-0 lg:border-l-4 border-trat-black min-h-[400px] relative">
+                                    <iframe 
+                                        src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3914.070387626128!2d-38.00381152399766!3d-11.182424326412423!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x711b35233205547%3A0x9ee4e2f07393acd4!2sTRAT%20FISIOTERAPIA-%20Cl%C3%ADnica%20de%20fisioterapia%20especializada%20no%20tratamento%20da%20SUA%20dor*21!5e0!3m2!1spt-BR!2sbr!4v1771512458902!5m2!1spt-BR!2sbr" 
+                                        className="absolute inset-0 w-full h-full"
+                                        style={{ border: 0 }} 
+                                        allowFullScreen 
+                                        loading="lazy" 
+                                        referrerPolicy="no-referrer-when-downgrade"
+                                    ></iframe>
+                                </div>
+
+                            </div>
+                        </div>
+                    </section>
+
+                    {/* FOOTER */}
+                    <footer className="bg-trat-black py-16 text-center border-t-4 border-trat-orange">
+                        <div className="text-4xl font-logo font-black italic tracking-tighter text-white mb-8">
+                            <span className="text-trat-green">▲</span> trat
+                        </div>
+                        <p className="text-gray-500 font-bold uppercase tracking-widest text-sm mb-8">
+                            Fisioterapia •  Cuidar de você é nossa missão.
+                        </p>
+                        <div className="flex justify-center gap-8 mb-8">
+                            <a href="#" className="text-white hover:text-trat-orange transition-colors"><i data-lucide="instagram" className="w-8 h-8"></i></a>
+                            <a href="#" className="text-white hover:text-trat-green transition-colors"><i data-lucide="facebook" className="w-8 h-8"></i></a>
+                        </div>
+                        <p className="text-gray-600 text-sm">© 202 Trat. Todos os direitos reservados.</p>
+                    </footer>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
+</html>
